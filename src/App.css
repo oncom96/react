@@ -1,0 +1,13 @@
+.container{
+  text-align: left;
+}
+
+#main-container {
+  border: 1px solid #Ddd;
+  padding: 15px;
+}
+
+#main-container > .row {
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+}
