@@ -1,0 +1,40 @@
+name: "ThunderScan Analysis"
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: thunderscan-test
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    #- uses: actions/checkout@v2
+
+    # ThunderScan Action
+    - name: ThunderScan
+      uses: defensecode/thunderscan-action@v1.0
+      with:
+        api_url: 'https://10.102.244.159:8999/'
+        client_path: '/app/thunderscan/thunderscan_3.1.1/thunderscan-linux'
+        api_token:  ${{ secrets.7318bfae126551905df3dd60645fcd32e7a73485c22f7cd884f7e92e1aee8581}}
+
+    - name: Expose report
+      uses: actions/upload-artifact@v2
+      with:
+        name: SARIF results
+        path: thunderscan-sarif.json
+    # Uploads thunderscan-sarif.json to GitHub repository using the upload-sarif action
+    - uses: github/codeql-action/upload-sarif@v1
+      with:
+        # Path to SARIF file relative to the root of the repository
+        sarif_file: thunderscan-sarif.json
